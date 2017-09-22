@@ -23,9 +23,19 @@ bootloader.bin: bootloader.s
 	# -O 表示输出的格式
 	$(OBJCOPY) -R .pdr -R .comment -R.note -S -O binary bootloader bootloader.bin
 
-run: bootloader.bin
-	$(QEMU) -boot a -fda bootloader.bin
-rundebug: bootloader.bin
+kernal: kernal.s
+	$(AS) -n -g -o kernal.s kernal
+	$(LD) $(LDFLAGS) -o kernal kernal.o
+	$(OBJCOPY) -R .pdr -R .comment -R.note -S -O binary kernal kennal.bin
+
+bootimg:kernal.bin bootloader.bin
+  dd if=bootsect.bin of=bootimg bs=512 count=1
+	dd if=kernal.bin of=bootimg bs=512 count=4 seek=1
+	echo "Build bootimg done"
+
+run: bootimg
+	$(QEMU) -boot a -fda bootimg
+rundebug: bootimg
 	$(QEMU) -s -S -boot a -fda bootloader.bin
 
 clean:
