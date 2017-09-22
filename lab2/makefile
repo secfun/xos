@@ -26,7 +26,7 @@ bootloader.bin: bootloader.s
 run: bootloader.bin
 	$(QEMU) -boot a -fda bootloader.bin
 rundebug: bootloader.bin
-	$(QEMU) -boot a -fda bootloader.bin
+	$(QEMU) -s -S -boot a -fda bootloader.bin
 
 clean:
 	rm -f bootloader.o bootloader bootloader.bin
