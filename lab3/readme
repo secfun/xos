@@ -1,0 +1,6 @@
+添加gdb调试
+-s 停止qemu 等待gdb连接
+-S qemu启东市不运行程序
+
+gdb
+target remote localhost:1234
