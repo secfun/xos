@@ -1,7 +1,4 @@
 # the follow command not found and can be replaced with as, ld, objcopy
-#AS=i686-elf-as
-#OBJCOPY=i686-elf-objcopy
-#LD=i686-elf-ld
 AS=as
 LD=ld
 OBJCOPY=objcopy
@@ -23,20 +20,20 @@ bootloader.bin: bootloader.s
 	# -O 表示输出的格式
 	$(OBJCOPY) -R .pdr -R .comment -R.note -S -O binary bootloader bootloader.bin
 
-kernal: kernal.s
-	$(AS) -n -g -o kernal.s kernal
-	$(LD) $(LDFLAGS) -o kernal kernal.o
-	$(OBJCOPY) -R .pdr -R .comment -R.note -S -O binary kernal kennal.bin
+kernel.bin: kernel.s
+	$(AS) -n -g -o kernel.o kernel.s
+	$(LD) $(LDFLAGS) -o kernel kernel.o
+	$(OBJCOPY) -R .pdr -R .comment -R.note -S -O binary kernel kernel.bin
 
-bootimg:kernal.bin bootloader.bin
-  dd if=bootsect.bin of=bootimg bs=512 count=1
-	dd if=kernal.bin of=bootimg bs=512 count=4 seek=1
+bootimg:kernel.bin bootloader.bin
+	dd if=bootloader.bin of=bootimg bs=512 count=1
+	dd if=kernel.bin of=bootimg bs=512 count=4 seek=1
 	echo "Build bootimg done"
 
-run: bootimg
+run:clean bootimg
 	$(QEMU) -boot a -fda bootimg
-rundebug: bootimg
-	$(QEMU) -s -S -boot a -fda bootloader.bin
+debug:clean bootimg
+	$(QEMU) -s -S -boot a -fda bootimg
 
 clean:
-	rm -f bootloader.o bootloader bootloader.bin
+	rm -f bootloader.o bootloader bootloader.bin bootimg kernel kernel.bin kernel.o

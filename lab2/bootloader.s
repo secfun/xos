@@ -28,13 +28,14 @@ _start:
 	mov $20, %cx   # Set the output length
 	mov $0x0007, %bx  # page 0, attribute 7 (normal) 设置必要的属性
 
-#lea msg1, %bp
-mov $msg1, %bp
-mov $0x1301, %ax  # write string, move cursor
-int $0x10    # 使用这个中断0x10的时候，输出的内容是从 ES:BP 中取得的，因而要设置好 ES 和 BP
+	#lea msg1, %bp
+	#mov $msg1, %bp
+	#mov $0x1301, %ax  # write string, move cursor
+	#int $0x10    # 使用这个中断0x10的时候，输出的内容是从 ES:BP 中取得的，因而要设置好 ES 和 BP
 
-loop_forever:
-	jmp loop_forever
+# comment to avoid to be blocked here.
+#loop_forever:
+#	jmp loop_forever
 
 load_floopy:
 	mov $0x0000, %dx # 选择磁盘0
